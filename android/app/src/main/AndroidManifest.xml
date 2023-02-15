@@ -2,7 +2,7 @@
     package="com.example.social_feed">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="ig_basic_display"
+        android:label="Social Feed"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

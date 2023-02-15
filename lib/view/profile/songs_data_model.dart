@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final songsDataModel = songsDataModelFromJson(jsonString);
 
 import 'dart:convert';
 
@@ -228,6 +225,7 @@ class Album {
     };
 }
 
+// ignore: constant_identifier_names
 enum AlbumTypeEnum { ALBUM, SINGLE }
 
 final albumTypeEnumValues = EnumValues({
@@ -287,6 +285,7 @@ class ExternalUrls {
     };
 }
 
+// ignore: constant_identifier_names
 enum ArtistType { ARTIST }
 
 final artistTypeValues = EnumValues({
@@ -317,6 +316,7 @@ class Image {
     };
 }
 
+// ignore: constant_identifier_names
 enum ReleaseDatePrecision { DAY }
 
 final releaseDatePrecisionValues = EnumValues({
@@ -339,6 +339,7 @@ class ExternalIds {
     };
 }
 
+// ignore: constant_identifier_names
 enum TrackType { TRACK }
 
 final trackTypeValues = EnumValues({

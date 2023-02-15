@@ -5,6 +5,8 @@ import 'package:ig_basic_display/view/authentication/spotify/spotify_viewmodel.d
 import 'package:webview_flutter/webview_flutter.dart';
 
 class SpotifyView extends StatefulWidget {
+  const SpotifyView({Key? key}) : super(key: key);
+
   @override
   _SpotifyViewState createState() => _SpotifyViewState();
 }
@@ -14,7 +16,6 @@ class _SpotifyViewState extends State<SpotifyView> {
     spotifyModel: SpotifyModel(),
   );
 
-  String? _accessToken;
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
@@ -33,27 +34,6 @@ class _SpotifyViewState extends State<SpotifyView> {
         ),
       );
 
-  void _handleAuthorizationResponse(String url) {
-    print(
-        ':::::::::::::::::::::           $url            ::::::::::::::::::::::::::::::::::::::');
-    // Parse the URL to get the access and refresh tokens
-    // ...
-
-    // Save the access token to secure storage
-    // ...
-
-    setState(() {
-      _accessToken = _getAccessTokenFromStorage();
-    });
-  }
-
-  String _getAccessTokenFromStorage() {
-    // Retrieve the access token from secure storage
-    // ...
-
-    return '';
-  }
-
   AppBar get appBar => AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -62,7 +42,7 @@ class _SpotifyViewState extends State<SpotifyView> {
           'Spotify Auth',
           style: Theme.of(context)
               .textTheme
-              .headline6!
+              .titleLarge!
               .copyWith(color: Colors.black),
         ),
       );

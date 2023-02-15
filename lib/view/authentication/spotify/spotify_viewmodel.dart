@@ -1,16 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:ig_basic_display/view/home/home_view.dart';
 import 'package:ig_basic_display/view/profile/spotify_profile_viewmodel.dart';
-import 'package:ig_basic_display/view/profile/spotify_user_data_model.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../../../core/utils/secret_constants.dart';
 import '../../../core/utils/routes.gr.dart';
 import '../../../main.dart';
-import '../../profile/profile_viewmodel.dart';
 import '../../../core/utils/constants.dart';
+import '../../splash/splash_view.dart';
 import 'spotify_model.dart';
 
 class SpotifyViewModel extends ChangeNotifier {
@@ -25,44 +24,32 @@ class SpotifyViewModel extends ChangeNotifier {
   void buildRedirectToHome(NavigationRequest navigation) async {
     final host = Uri.parse(navigation.url).toString();
 
-    if (host.contains(Uri.parse(SpotifyConstant.redirectUri).host))  {
-      print(host);
-      await  getAuthorizationCode(host);
+    if (host.contains(Uri.parse(SpotifyConstant.redirectUri).host)) {
+      debugPrint(host);
+      await getAuthorizationCode(host);
       await getTokenAndUserID().then(
         (isDone) async {
+          final savedData = GetStorage();
           if (isDone) {
-            // await getUserData().then((value) => print(
-            //     '___________________________________________________________'));
-       
-
-             SpotifyProfileViewmodel(spotifyModel).getUserData().then(
-              
+            SpotifyProfileViewmodel(spotifyModel).getUserData().then(
               (userData) {
-
                 userDataModel = userData;
+                savedData.write('SPOTIFY_USER_DATA', userData);
 
-                    SpotifyProfileViewmodel(spotifyModel).getRecentSongs().then(
-              
-              (playedSongs) {
+                SpotifyProfileViewmodel(spotifyModel).getRecentSongs().then(
+                  (playedSongs) {
+                    recentSongs = playedSongs;
+                    savedData.write(
+                        'SPOTIFY_MUSIC_DATA', playedSongs);
 
-                recentSongs = playedSongs;
-
-
-                router.push(
-                  HomeRoute(
-                  
-                  ),
+                    router.push(
+                       HomeRoute(),
+                    );
+                  },
                 );
-            },
+              },
             );
-               
-            },
-            );
-
-         
           }
-          print(isDone);
-          print('else condition ran !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
         },
       );
     }
@@ -70,8 +57,9 @@ class SpotifyViewModel extends ChangeNotifier {
 
   Future<void> getAuthorizationCode(String url) async {
     spotifyModel.authorizationCode =
-        await url.replaceAll('${SpotifyConstant.redirectUri}?code=', '');
-    print("Replaced state  =====>>>>> " + spotifyModel.authorizationCode.toString());
+        url.replaceAll('${SpotifyConstant.redirectUri}?code=', '');
+    debugPrint("Replaced state  =====>>>>> " +
+        spotifyModel.authorizationCode.toString());
   }
 
   String tokenEndpoint = 'https://accounts.spotify.com/api/token';
@@ -90,71 +78,25 @@ class SpotifyViewModel extends ChangeNotifier {
       'grant_type': 'authorization_code',
       'code': spotifyModel.authorizationCode.toString(),
       'redirect_uri': SpotifyConstant.redirectUri,
-    }).then((response)  {
-   if (response.statusCode == 200)  {
-        // parse the JSON response
-        print(response.statusCode);
-        var data = jsonDecode(response.body);
-        print(data);
+    }).then((response) {
+      if (response.statusCode == 200) {
 
-        // extract the access token and refresh token
+        var data = jsonDecode(response.body);
         spotifyModel.accessToken = data['access_token'].toString();
- print(spotifyModel.accessToken);
-spotifyModel.refreshToken = data['refresh_token'].toString();
- print(spotifyModel.refreshToken);
-// do something with the tokens
+        spotifyModel.refreshToken = data['refresh_token'].toString();
+
       } else {
-       // handle any errors that occur
-        print('Error ${response.statusCode}: ${response.reasonPhrase}');
+
+        debugPrint('Error ${response.statusCode}: ${response.reasonPhrase}');
       }
     }).catchError((error) {
-      // handle any errors that occur
-      print(error);
+
+      debugPrint(error);
     });
 
     return (spotifyModel.accessToken != null &&
         spotifyModel.refreshToken != null);
   }
-
-  // Future<bool> getUserData() async {
-  //   Uri url = Uri.parse('https://api.spotify.com/v1/me');
-
-  //   http.get(url, headers: {
-  //     'Content-Type': 'application/json',
-  //     'Accept': 'application/json',
-  //     'Authorization': 'Bearer ${spotifyModel.accessToken}',
-  //   }).then((response) {
-  //     if (response.statusCode == 200) {
-  //       // parse the JSON response
-
-  //       SpotifyUserDataModel userDataModel =
-  //           spotifyUserDataModelFromJson(response.body);
-  //       // var data = jsonDecode(response.body);
-
-  //       // extract the access token and refresh token
-
-  //       print('::::::::::::::::::::::::::::::::::::');
-  //       print(userDataModel.displayName);
-  //       print(userDataModel.country);
-  //       print(userDataModel.email);
-  //       print(userDataModel.images[0].url);
-  //       print(':::::::::::::::::::::::::::::::::::::');
-
-  //       // do something with the tokens
-  //     } else {
-  //       // handle any errors that occur
-  //       print('Error ${response.statusCode}: ${response.reasonPhrase}');
-  //     }
-  //   }).catchError((error) {
-  //     // handle any errors that occur
-  //     print(error);
-  //   });
-  //   return (spotifyModel.accessToken != null &&
-  //           spotifyModel.refreshToken != null)
-  //       ? true
-  //       : false;
-  // }
-
   void onWebViewCreated(WebViewController c) {
     controller.complete(c);
   }

@@ -41,7 +41,7 @@ class _InstagramViewState extends State<InstagramView> {
           'Instagram Auth',
           style: Theme.of(context)
               .textTheme
-              .headline6!
+              .titleLarge!
               .copyWith(color: Colors.black),
         ),
       );

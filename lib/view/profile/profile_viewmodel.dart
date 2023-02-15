@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'package:get_storage/get_storage.dart';
 import '../../../core/utils/constants.dart';
 import '../../../view/authentication/instagram/instagram_model.dart';
-import '../../main.dart';
 import 'package:http/http.dart' as http;
+import '../splash/splash_view.dart';
 
 class ProfileViewmodel {
   ProfileViewmodel(this.instagramModel);
@@ -10,6 +11,9 @@ class ProfileViewmodel {
   final InstagramModel instagramModel;
 
   Future<List<String>?> getUserProfile() async {
+
+final savedData = GetStorage();
+
     final fields = AppConstant.userFields.join(',');
     final responseNode = await http.get(
       Uri.parse(
@@ -39,12 +43,12 @@ class ProfileViewmodel {
           break;
       }
     }
-
-    print('username: ${instagramModel.username}');
+    savedData.write('INSTA', instagramModel.mediaUrlList);
     return instagramModel.mediaUrlList!;
   }
 
-  static void logout() {
-    router.popUntilRoot();
+  static void onLogoutPressed() {
+    // router.popUntilRoot();
+    mediaUrlList = null;
   }
 }
