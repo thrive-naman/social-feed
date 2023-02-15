@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:ig_basic_display/view/home/home_view.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../../../core/utils/secret_constants.dart';
 import '../../../core/utils/routes.gr.dart';
@@ -27,11 +28,12 @@ class InstagramViewmodel extends ChangeNotifier {
         (isDone) async {
           if (isDone) {
             ProfileViewmodel(instagramModel).getUserProfile().then(
-              (mediaUrlList) {
+              (mediaList) {
+                mediaUrlList = mediaList;
                 print('::::::::::::::::::::::::::hello');
                 router.push(
                   HomeRoute(
-                    mediaUrlList: mediaUrlList,
+
                   ),
                 );
                 print('${instagramModel.username} logged in!');

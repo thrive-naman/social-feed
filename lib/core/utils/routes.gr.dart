@@ -58,14 +58,9 @@ class AppRouter extends _i6.RootStackRouter {
       );
     },
     HomeRoute.name: (routeData) {
-      final args =
-          routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
       return _i6.AdaptivePage<dynamic>(
         routeData: routeData,
-        child: _i5.HomeView(
-          key: args.key,
-          mediaUrlList: args.mediaUrlList,
-        ),
+        child: const _i5.HomeView(),
       );
     },
   };
@@ -171,34 +166,12 @@ class SpotifyRoute extends _i6.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i5.HomeView]
-class HomeRoute extends _i6.PageRouteInfo<HomeRouteArgs> {
-  HomeRoute({
-    _i7.Key? key,
-    List<String>? mediaUrlList,
-  }) : super(
+class HomeRoute extends _i6.PageRouteInfo<void> {
+  const HomeRoute()
+      : super(
           HomeRoute.name,
           path: '/',
-          args: HomeRouteArgs(
-            key: key,
-            mediaUrlList: mediaUrlList,
-          ),
         );
 
   static const String name = 'HomeRoute';
-}
-
-class HomeRouteArgs {
-  const HomeRouteArgs({
-    this.key,
-    this.mediaUrlList,
-  });
-
-  final _i7.Key? key;
-
-  final List<String>? mediaUrlList;
-
-  @override
-  String toString() {
-    return 'HomeRouteArgs{key: $key, mediaUrlList: $mediaUrlList}';
-  }
 }

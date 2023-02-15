@@ -16,5 +16,5 @@ class SpotifyConstant {
   static const String responseType = 'code';
   static const List<String> userFields = ['id', 'username', 'media'];
   final  String authUrl =
-      'https://accounts.spotify.com/authorize?client_id=${SecretConstant.spotifyClientID}&response_type=code&redirect_uri=$redirectUri&scope=user-read-private%20user-read-email';
+      'https://accounts.spotify.com/authorize?client_id=${SecretConstant.spotifyClientID}&response_type=code&redirect_uri=$redirectUri&scope=user-read-private%20user-read-email%20user-read-recently-played';
 }
